@@ -1580,6 +1580,7 @@ class HFRLTrainerBuilder(TrainerBuilderBase):
         elif self.cfg.rl == "orpo":
             trainer_cls = AxolotlORPOTrainer
             trainer_cls_args = [self.model]
+            self.model.to("cuda") # This is for ORPO + FSDP
         else:
             raise ValueError(f"Unsupported RL: {self.cfg.rl}")
         dpo_trainer = trainer_cls(
