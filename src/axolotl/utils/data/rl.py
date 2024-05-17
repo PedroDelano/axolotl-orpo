@@ -85,7 +85,13 @@ def load_prepare_dpo_datasets(cfg):
                     ds_transform_fn = load_orpo(_type, _cfg, dataset_idx=i)
                 else:
                     ds_transform_fn = load_dpo(_type, _cfg, dataset_idx=i)
-                sig = inspect.signature(ds_transform_fn)
+                # sig = inspect.signature(ds_transform_fn)
+                try:
+                    sig = inspect.signature(ds_transform_fn)
+                except Exception:
+                    LOG.warning(f"Failed to load prompt strategy {_type}. Will assume the dataset is already in the expected format.")
+                    split_datasets[i] = data_set
+                    continue
                 if "tokenizer" in sig.parameters:
                     if not tokenizer:
                         tokenizer = load_tokenizer(_cfg)
